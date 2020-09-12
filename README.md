@@ -1,6 +1,6 @@
 # Terraform with Libvirt/KVM provider
 
-Terraforms examples with [terraform-provider-libvirt/](https://github.com/dmacvicar/terraform-provider-libvirt/).
+Terraforms examples with [terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt/).
 
 ## Local installation
 
