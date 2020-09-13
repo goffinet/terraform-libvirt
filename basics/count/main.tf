@@ -44,6 +44,17 @@ resource "libvirt_domain" "domain" {
     network_name   = "default"
     wait_for_lease = true
   }
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
+  }
+
+  console {
+    type        = "pty"
+    target_type = "virtio"
+    target_port = "1"
+  }
 
   count = 4
 }
