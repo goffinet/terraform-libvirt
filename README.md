@@ -22,18 +22,8 @@ terraform plan
 
 ## Docker
 
-```bash
-if [ "$EUID" -ne 0 ] ; then echo "Please run as root" ; exit ; fi
-curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
-if [ -f /etc/debian_version ]; then
-apt-get update && apt-get -y install python3-pip
-elif [ -f /etc/redhat-release ]; then
-yum -y install python3-pip
-fi
-pip3 install docker-compose
 ```
-
-```
+cd terraform-libvirt/basics/ubuntu
 docker run --rm --privileged --cap-add=ALL \
 -v /lib/modules:/lib/modules \
 -v /var/lib/libvirt:/var/lib/libvirt \
@@ -42,5 +32,9 @@ docker run --rm --privileged --cap-add=ALL \
 -v `pwd`:/opt/ \
 -w /opt/ \
 -it \
-goffinet/terraform
+goffinet/terraform terraform init
 ```
+
+## References
+
+- https://hub.docker.com/r/larsks/libvirt/dockerfile
