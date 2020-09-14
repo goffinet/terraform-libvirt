@@ -1,5 +1,7 @@
 # Lab103 : OSPF quad pod
 
+This lab is based on [github.com/goffinet/virt-scripts Lab103 : OSPF quad pod](https://github.com/goffinet/virt-scripts/tree/master/labs/103).
+
 ## Topology
 
 ![OSPF quad pod Topology](lab103-ospf-quad-pod_small.png)
