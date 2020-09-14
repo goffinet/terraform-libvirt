@@ -43,28 +43,28 @@ resource "libvirt_cloudinit_disk" "router_commoninit" {
 }
 
 resource "libvirt_volume" "router_os_image" {
-  name   = "router-os_image"
+  name   = "router${local.lab_name}-os_image"
   source = local.router_image_url
   pool   = libvirt_pool.lab_image_pool.name
   format = "qcow2"
 }
 
 resource "libvirt_volume" "router_volume" {
-  name           = "router_volume-${count.index + 1}"
+  name           = "router${local.lab_name}_volume-${count.index + 1}"
   base_volume_id = libvirt_volume.router_os_image.id
   count          = local.count
   pool = libvirt_pool.lab_image_pool.name
 }
 
 resource "libvirt_volume" "pc_os_image" {
-  name   = "pc-os_image"
+  name   = "pc${local.lab_name}-os_image"
   source = local.pc_image_url
   pool   = libvirt_pool.lab_image_pool.name
   format = "qcow2"
 }
 
 resource "libvirt_volume" "pc_volume" {
-  name           = "pc_volume-${count.index + 1}"
+  name           = "pc${local.lab_name}_volume-${count.index + 1}"
   base_volume_id = libvirt_volume.pc_os_image.id
   count          = local.count
   pool = libvirt_pool.lab_image_pool.name
