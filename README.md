@@ -2,6 +2,8 @@
 
 Terraforms examples with [terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt/).
 
+I use qemu/KVM images built with packer thanks to this project : [packer-kvm](https://github.com/goffinet/packer-kvm). They are regularly published on a website.
+
 Only for education and learning purposes.
 
 ## Local installation
