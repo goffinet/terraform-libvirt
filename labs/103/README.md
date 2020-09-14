@@ -2,7 +2,7 @@
 
 ## Topology
 
-![OSPF quad pod Topology](lab103-ospf-quad-pod.png)
+![OSPF quad pod Topology](lab103-ospf-quad-pod_small.png)
 
 <!--
 

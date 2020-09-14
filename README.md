@@ -35,6 +35,12 @@ docker run --rm --privileged --cap-add=ALL \
 goffinet/terraform terraform init
 ```
 
+## Deploy a routing lab with Terraform on Libvirt/KVM
+
+See [this routing lab with 8 VMs](labs/103/README.md)
+
+![](labs/103/lab103-ospf-quad-pod_small.png)
+
 ## References
 
 - https://hub.docker.com/r/larsks/libvirt/dockerfile
