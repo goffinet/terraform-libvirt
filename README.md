@@ -4,7 +4,7 @@ Terraforms examples with [terraform-provider-libvirt](https://github.com/dmacvic
 
 I use qemu/KVM images built with packer thanks to this project : [packer-kvm](https://github.com/goffinet/packer-kvm). They are regularly published on a website.
 
-Only for education and learning purposes.
+Only for education and learning purposes. Do not use it in production.
 
 ## Local installation
 
@@ -14,6 +14,11 @@ Setup a local installation with Libvirt, Terraform and the Libvirt provider plug
 bash -x setup.sh
 ```
 
+## Projects
+
+- [basics examples](https://github.com/goffinet/terraform-libvirt/tree/master/basics) terraform-provider-libvirt ressources based on contribs
+- [network labs](https://github.com/goffinet/terraform-libvirt/tree/master/labs) ported from bash
+
 ## Deploy with terraform
 
 ```bash
@@ -22,7 +27,7 @@ cd terraform-libvirt/basics/ubuntu
 terraform plan
 ```
 
-## Docker
+## Use Docker
 
 ```
 cd terraform-libvirt/basics/ubuntu
