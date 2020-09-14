@@ -1,0 +1,65 @@
+diagram:
+  fill: "white"
+  rows: 4
+  columns: 5
+  gridLines: false
+  aspectRatio: "3:2"
+title:
+  color: black
+  fill: none
+  logoFill: white
+  logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+  stroke: black
+  text: "Lab103 : OSPF quad pod"
+  subText: "https://github.com/goffinet/virt-scripts/tree/master/labs/103"
+  type: box
+  author: François Goffinet
+  company: "@goffinet"
+  heightPercentage: 10
+cisco: &cisco
+  color: "#004BAF"
+  fill: "white"
+  iconFamily: "cisco"
+  iconFill: "#004BAF"
+  iconStrokeWidth: .25
+  preserveWhite: true
+  #stroke: "#004BAF"
+  stroke: none
+connection: &connection
+  color: "#004BAF"
+  stroke: "darkslategrey"
+#  stroke: "black"
+icons:
+  R1: {<<: *cisco, x: 1, y: 3, icon: "router"}
+  R2: {<<: *cisco, x: 3, y: 3, icon: "router"}
+  R3: {<<: *cisco, x: 1, y: 1, icon: "router"}
+  R4: {<<: *cisco, x: 3, y: 1, icon: "router"}
+  wan-switch: {<<: *cisco, x: 2, y: 2, icon: "workgroupswitch"}
+  pc1: {<<: *cisco, x: 0, y: 3, icon: "workstation"}
+  pc2: {<<: *cisco, x: 4, y: 3, icon: "workstation"}
+  pc3: {<<: *cisco, x: 0, y: 1, icon: "workstation"}
+  pc4: {<<: *cisco, x: 4, y: 1, icon: "workstation"}
+connections:
+  - { <<: *connection, endpoints: [R1:eth1 .1/24, wan-switch] }
+  - { <<: *connection, endpoints: [R2:eth1 .2/24, wan-switch] }
+  - { <<: *connection, endpoints: [R3:eth1 .3/24, wan-switch] }
+  - { <<: *connection, endpoints: [R4:eth1 .4/24, wan-switch] }
+  - { <<: *connection, endpoints: [R1:eth0 .1/24, pc1] }
+  - { <<: *connection, endpoints: [R2:eth0 .1/24, pc2] }
+  - { <<: *connection, endpoints: [R3:eth0 .1/24, pc3] }
+  - { <<: *connection, endpoints: [R4:eth0 .1/24, pc4] }
+group: &group
+  fill: "none"
+  color: black
+  stroke: none
+groups:
+  ipwan: { <<: *group, stroke: lightgrey, textLocation: bottomMiddle, name: 10.103.0.0/24, members: [wan-switch] }
+  ip6wan: { <<: *group, stroke: lightgrey, textLocation: topMiddle, name: fd00:103::/64, members: [wan-switch] }
+  ipr1: { <<: *group, textLocation: bottomMiddle, name: 10.103.1.0/24, members: [pc1] }
+  ipr2: { <<: *group, textLocation: bottomMiddle, name: 10.103.2.0/24, members: [pc2] }
+  ipr3: { <<: *group, textLocation: bottomMiddle, name: 10.103.3.0/24, members: [pc3] }
+  ipr4: { <<: *group, textLocation: bottomMiddle, name: 10.103.4.0/24, members: [pc4] }
+  ip6r1: { <<: *group, textLocation: topMiddle, name: fd00:103:1::/64, members: [pc1] }
+  ip6r2: { <<: *group, textLocation: topMiddle, name: fd00:103:2::/64, members: [pc2] }
+  ip6r3: { <<: *group, textLocation: topMiddle, name: fd00:103:3::/64, members: [pc3] }
+  ip6r4: { <<: *group, textLocation: topMiddle, name: fd00:103:4::/64, members: [pc4] }
