@@ -12,73 +12,85 @@ provider "libvirt" {
   uri = "qemu:///system"
 }
 
-variable "counter" {
-  default = 4
+locals {
+  count = 4
+  lab_name = "103"
+  router_memory = "512"
+  router_image_url = "http://get.goffinet.org/kvm/centos7.qcow2"
+  pc_memory = "512"
+  pc_image_url = "http://get.goffinet.org/kvm/focal.qcow2"
 }
 
-data "template_file" "user_data" {
-  count = var.counter
-  template = "${file("${path.module}/cloud_init.cfg")}"
+resource "libvirt_pool" "lab_image_pool" {
+  name = "lab${local.lab_name}_image_pool"
+  type = "dir"
+  path = "/tmp/lab${local.lab_name}-image-pool"
+}
+
+data "template_file" "router_user_data" {
+  count = local.count
+  template = "${file("${path.module}/router_cloud_init.cfg")}"
   vars = {
     id = "${count.index + 1}"
   }
 }
 
-resource "libvirt_cloudinit_disk" "commoninit" {
-  count = var.counter
-  name           = "commoninit${count.index + 1}.iso"
-  user_data      = data.template_file.user_data[count.index].rendered
-  pool           = libvirt_pool.lab103_image_pool.name
+resource "libvirt_cloudinit_disk" "router_commoninit" {
+  count = local.count
+  name           = "router-commoninit${count.index + 1}.iso"
+  user_data      = data.template_file.router_user_data[count.index].rendered
+  pool           = libvirt_pool.lab_image_pool.name
 }
 
-resource "libvirt_pool" "lab103_image_pool" {
-  name = "lab103_image_pool"
-  type = "dir"
-  path = "/tmp/lab103-image-pool"
-}
-
-resource "libvirt_volume" "os_image" {
-  name   = "os_image"
-  source = "http://get.goffinet.org/kvm/centos7.qcow2"
-  pool   = libvirt_pool.lab103_image_pool.name
+resource "libvirt_volume" "router_os_image" {
+  name   = "router-os_image"
+  source = local.router_image_url
+  pool   = libvirt_pool.lab_image_pool.name
   format = "qcow2"
 }
 
 resource "libvirt_volume" "router_volume" {
   name           = "router_volume-${count.index + 1}"
-  base_volume_id = libvirt_volume.os_image.id
-  count          = var.counter
-  pool = libvirt_pool.lab103_image_pool.name
+  base_volume_id = libvirt_volume.router_os_image.id
+  count          = local.count
+  pool = libvirt_pool.lab_image_pool.name
+}
+
+resource "libvirt_volume" "pc_os_image" {
+  name   = "pc-os_image"
+  source = local.pc_image_url
+  pool   = libvirt_pool.lab_image_pool.name
+  format = "qcow2"
 }
 
 resource "libvirt_volume" "pc_volume" {
   name           = "pc_volume-${count.index + 1}"
-  base_volume_id = libvirt_volume.os_image.id
-  count          = var.counter
-  pool = libvirt_pool.lab103_image_pool.name
+  base_volume_id = libvirt_volume.pc_os_image.id
+  count          = local.count
+  pool = libvirt_pool.lab_image_pool.name
 }
 
 resource "libvirt_network" "lan" {
-  name = "lan${count.index + 1}-103"
+  name = "lan${count.index + 1}-${local.lab_name}"
   mode = "none"
-  bridge = "lan${count.index + 1}-103"
+  bridge = "lan${count.index + 1}-${local.lab_name}"
   autostart = true
-  count = var.counter
+  count = local.count
 }
 
 resource "libvirt_network" "wan" {
-  name = "wan103"
+  name = "wan${local.lab_name}"
   mode = "none"
   autostart = true
 }
 
 resource "libvirt_domain" "router" {
-  count = var.counter
-  name = "r${count.index + 1}-103"
-  memory = "512"
+  count = local.count
+  name = "r${count.index + 1}-${local.lab_name}"
+  memory = local.router_memory
   vcpu   = 1
   qemu_agent = true
-  cloudinit = element(libvirt_cloudinit_disk.commoninit.*.id, count.index)
+  cloudinit = element(libvirt_cloudinit_disk.router_commoninit.*.id, count.index)
   disk {
     volume_id = element(libvirt_volume.router_volume.*.id, count.index)
   }
@@ -112,9 +124,9 @@ resource "libvirt_domain" "router" {
 }
 
 resource "libvirt_domain" "pc" {
-  count = var.counter
-  name = "pc${count.index + 1}-103"
-  memory = "512"
+  count = local.count
+  name = "pc${count.index + 1}-${local.lab_name}"
+  memory = local.pc_memory
   vcpu   = 1
   qemu_agent = true
   disk {
