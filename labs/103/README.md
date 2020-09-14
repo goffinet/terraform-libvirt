@@ -338,7 +338,7 @@ r1-103# show ipv6 ospf6 linkstate
 ## Terraform references
 
 - https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file
-- https://github.com/hashicorp/terraform/issues/1893
+- [template_file with count=N usage help #1893](https://github.com/hashicorp/terraform/issues/1893)
 - https://stackoverflow.com/questions/51882802/terraform-using-count-index-in-a-resource-name
 - https://www.terraform.io/docs/configuration/resources.html#count-multiple-resource-instances-by-count
 - https://cloudinit.readthedocs.io/en/latest/topics/format.html
