@@ -1,5 +1,7 @@
 # Lab 101
 
+Ce lab est basé sur [github.com/goffinet Lab 101](https://github.com/goffinet/virt-scripts/tree/master/labs/101)
+
 ## Topologie
 
 ![lab101](https://www.lucidchart.com/publicSegments/view/cddee598-583c-41a4-8523-d17129144dfd/image.png)
