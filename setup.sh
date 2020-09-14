@@ -25,10 +25,11 @@ echo "security_driver = \"none\"" >> /etc/libvirt/qemu.conf
 systemctl restart libvirtd
 currentd=$PWD
 cd /tmp
-wget https://releases.hashicorp.com/terraform/${tfversion}/terraform_${tfversion}_linux_amd64.zip
-unzip terraform_${tfversion}_linux_amd64.zip
+wget https://releases.hashicorp.com/terraform/${tf_version}/terraform_${tf_version}_linux_amd64.zip
+unzip terraform_${tf_version}_linux_amd64.zip
 chmod +x terraform
 mv terraform /usr/local/bin/
+source /etc/os-release
 if [ $ID == "ubuntu" ] && [ $VERSION_ID == "18.04" ] ; then
 wget https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v0.6.2/terraform-provider-libvirt-0.6.2+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz
 tar xvf terraform-provider-libvirt-0.6.2+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz
@@ -38,5 +39,16 @@ fi
 cd $currentd
 }
 
+3_docker_installation () {
+curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
+if [ -f /etc/debian_version ]; then
+apt-get update && apt-get -y install python3-pip
+elif [ -f /etc/redhat-release ]; then
+yum -y install python3-pip
+fi
+pip3 install docker-compose
+}
+
 1_virtualization_installation
 2_terraform-provider-libvirt_installation
+3_docker_installation
