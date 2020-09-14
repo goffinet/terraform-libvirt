@@ -43,4 +43,5 @@ See [this routing lab with 8 VMs](labs/103/README.md)
 
 ## References
 
+- https://github.com/dmacvicar/terraform-provider-libvirt
 - https://hub.docker.com/r/larsks/libvirt/dockerfile
