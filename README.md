@@ -37,7 +37,7 @@ goffinet/terraform terraform init
 
 ## Deploy a routing lab with Terraform on Libvirt/KVM
 
-See [this routing lab with 8 VMs](labs/103/README.md)
+See [this routing lab with 8 VMs](labs/103/README.md).
 
 ![](labs/103/lab103-ospf-quad-pod_small.png)
 
