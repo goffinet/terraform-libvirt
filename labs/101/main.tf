@@ -12,6 +12,18 @@ provider "libvirt" {
   uri = "qemu:///system"
 }
 
+locals {
+  lab_name = "101"
+  memory = "512"
+  image_url = "http://get.goffinet.org/kvm/centos7.qcow2"
+}
+
+resource "libvirt_pool" "lab_image_pool" {
+  name = "lab${local.lab_name}_image_pool"
+  type = "dir"
+  path = "/tmp/lab${local.lab_name}-image-pool"
+}
+
 data "template_file" "user_data" {
   template = file("${path.module}/cloud_init.cfg")
 }
@@ -19,44 +31,38 @@ data "template_file" "user_data" {
 resource "libvirt_cloudinit_disk" "commoninit" {
   name           = "commoninit.iso"
   user_data      = data.template_file.user_data.rendered
-  pool           = libvirt_pool.lab101_image_pool.name
+  pool           = libvirt_pool.lab_image_pool.name
 }
 
-resource "libvirt_network" "lan101" {
-  name = "lan101"
+resource "libvirt_network" "lan" {
+  name = "lan-${local.lab_name}"
   mode = "none"
 }
 
-resource "libvirt_pool" "lab101_image_pool" {
-  name = "os_image-image-pool"
-  type = "dir"
-  path = "/tmp/lab101-image-pool"
-}
-
 resource "libvirt_volume" "os_image" {
-  name   = "os_image_image"
-  source = "http://get.goffinet.org/kvm/centos7.qcow2"
-  pool   = libvirt_pool.lab101_image_pool.name
+  name   = "lab${local.lab_name}-os_image_image"
+  source = local.image_url
+  pool   = libvirt_pool.lab_image_pool.name
   format = "qcow2"
 }
 
 resource "libvirt_volume" "volume" {
-  name           = "volume-${count.index}"
+  name           = "lab${local.lab_name}-volume-${count.index}"
   base_volume_id = libvirt_volume.os_image.id
   count          = 2
-  pool = libvirt_pool.lab101_image_pool.name
+  pool = libvirt_pool.lab_image_pool.name
 }
 
-resource "libvirt_domain" "pc1" {
-  name = "pc1-101"
-  memory = "512"
+resource "libvirt_domain" "pc" {
+  name = "pc1-${local.lab_name}"
+  memory = local.memory
   vcpu   = 1
   disk {
     volume_id = libvirt_volume.volume.0.id
   }
 
   network_interface {
-    network_id     = libvirt_network.lan101.id
+    network_id     = libvirt_network.lan.id
     wait_for_lease = false
   }
 
@@ -74,8 +80,8 @@ resource "libvirt_domain" "pc1" {
 }
 
 resource "libvirt_domain" "router" {
-  name = "r101"
-  memory = "512"
+  name = "r${local.lab_name}"
+  memory = local.memory
   vcpu   = 1
   cloudinit = libvirt_cloudinit_disk.commoninit.id
 
@@ -84,7 +90,7 @@ resource "libvirt_domain" "router" {
   }
 
   network_interface {
-    network_id     = libvirt_network.lan101.id
+    network_id     = libvirt_network.lan.id
     wait_for_lease = false
   }
 
