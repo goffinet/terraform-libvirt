@@ -81,8 +81,14 @@ IPv6 diagram :
 ## First : Start the topology
 
 ```bash
-docker run --rm --privileged --cap-add=ALL -v /lib/modules:/lib/modules -v /var/lib/libvirt:/var/lib/libvirt -v /var/log:/var/log -v /run:/run -v `pwd`:/opt/ -w /opt/ -it goffinet/terraform /bin/terraform init
-docker run --rm --privileged --cap-add=ALL -v /lib/modules:/lib/modules -v /var/lib/libvirt:/var/lib/libvirt -v /var/log:/var/log -v /run:/run -v `pwd`:/opt/ -w /opt/ -it goffinet/terraform /bin/terraform apply -auto-approve
+docker run --rm --privileged --cap-add=ALL \
+-v /lib/modules:/lib/modules -v /var/lib/libvirt:/var/lib/libvirt \
+-v /var/log:/var/log -v /run:/run -v `pwd`:/opt/ -w /opt/ \
+-it goffinet/terraform /bin/terraform init
+docker run --rm --privileged --cap-add=ALL \
+-v /lib/modules:/lib/modules -v /var/lib/libvirt:/var/lib/libvirt \
+-v /var/log:/var/log -v /run:/run -v `pwd`:/opt/ -w /opt/ \
+-it goffinet/terraform /bin/terraform  apply -auto-approve
 ```
 
 ## Virtual machines and networks
